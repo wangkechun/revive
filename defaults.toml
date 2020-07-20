@@ -4,4 +4,4 @@ confidence = 0.8
 errorCode = 0
 warningCode = 0
 
-[rule.struct-form-tag]
+[rule.i18n]
