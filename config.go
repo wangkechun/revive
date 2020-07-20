@@ -25,25 +25,7 @@ func fail(err string) {
 }
 
 var defaultRules = []lint.Rule{
-	&rule.VarDeclarationsRule{},
-	&rule.PackageCommentsRule{},
-	&rule.DotImportsRule{},
-	&rule.BlankImportsRule{},
-	&rule.ExportedRule{},
-	&rule.VarNamingRule{},
-	&rule.IndentErrorFlowRule{},
-	&rule.IfReturnRule{},
-	&rule.RangeRule{},
-	&rule.ErrorfRule{},
-	&rule.ErrorNamingRule{},
-	&rule.ErrorStringsRule{},
-	&rule.ReceiverNamingRule{},
-	&rule.IncrementDecrementRule{},
-	&rule.ErrorReturnRule{},
-	&rule.UnexportedReturnRule{},
-	&rule.TimeNamingRule{},
-	&rule.ContextKeysType{},
-	&rule.ContextAsArgumentRule{},
+	&rule.I18nRule{},
 }
 
 var allRules = append([]lint.Rule{
@@ -88,6 +70,7 @@ var allRules = append([]lint.Rule{
 	&rule.UnconditionalRecursionRule{},
 	&rule.IdenticalBranchesRule{},
 	&rule.DeferRule{},
+	&rule.I18nRule{},
 }, defaultRules...)
 
 var allFormatters = []lint.Formatter{
