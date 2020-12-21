@@ -24,14 +24,24 @@ func foo() {
 
 	for i, newg := range groups {
 		go func(newg int) {
-			newg.run(m.opts.Context,i) // MATCH /loop variable i captured by func literal/
+			newg.run(m.opts.Context, i) // MATCH /loop variable i captured by func literal/
 		}(newg)
 	}
 
 	for i, newg := range groups {
 		newg := newg
 		go func() {
-			newg.run(m.opts.Context,i) // MATCH /loop variable i captured by func literal/
+			newg.run(m.opts.Context, i) // MATCH /loop variable i captured by func literal/
 		}()
+	}
+}
+
+func bar() {
+	mySlice := []string{"A", "B", "C"}
+	for index, value := range mySlice {
+		g.Go(func() {
+			fmt.Printf("Index: %d\n", index) // MATCH /loop variable index captured by func literal/
+			fmt.Printf("Value: %s\n", value) // MATCH /loop variable value captured by func literal/
+		})
 	}
 }

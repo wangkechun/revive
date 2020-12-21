@@ -15,6 +15,7 @@ import (
 var defaultRules = []lint.Rule{
 	// &rule.I18nRule{},
 	&rule.ErrWrapRule{},
+	&rule.RangeValInClosureRule{},
 }
 
 var allRules = append([]lint.Rule{

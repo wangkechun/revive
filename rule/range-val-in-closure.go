@@ -75,37 +75,69 @@ func (w rangeValInClosure) Visit(node ast.Node) ast.Visitor {
 		return w
 	}
 	var last *ast.CallExpr
+	var lastGGo *ast.CallExpr
 	switch s := body.List[len(body.List)-1].(type) {
 	case *ast.GoStmt:
 		last = s.Call
 	case *ast.DeferStmt:
 		last = s.Call
+	case *ast.ExprStmt:
+		if x, ok := s.X.(*ast.CallExpr); ok {
+			if fun, ok := x.Fun.(*ast.SelectorExpr); ok {
+				if x2, ok := fun.X.(*ast.Ident); ok {
+					if x2.Name == "g" && fun.Sel.Name == "Go" {
+						lastGGo = x
+					}
+				}
+			}
+		}
 	default:
 		return w
 	}
-	lit, ok := last.Fun.(*ast.FuncLit)
-	if !ok {
-		return w
-	}
-	if lit.Type == nil {
-		// Not referring to a variable (e.g. struct field name)
-		return w
-	}
-	ast.Inspect(lit.Body, func(n ast.Node) bool {
-		id, ok := n.(*ast.Ident)
-		if !ok || id.Obj == nil {
-			return true
+	if last != nil {
+		lit, ok := last.Fun.(*ast.FuncLit)
+		if !ok {
+			return w
 		}
-		for _, v := range vars {
-			if v.Obj == id.Obj {
-				w.onFailure(lint.Failure{
-					Confidence: 1,
-					Failure:    fmt.Sprintf("loop variable %v captured by func literal", id.Name),
-					Node:       n,
-				})
+		if lit.Type == nil {
+			// Not referring to a variable (e.g. struct field name)
+			return w
+		}
+		ast.Inspect(lit.Body, func(n ast.Node) bool {
+			id, ok := n.(*ast.Ident)
+			if !ok || id.Obj == nil {
+				return true
 			}
-		}
-		return true
-	})
+			for _, v := range vars {
+				if v.Obj == id.Obj {
+					w.onFailure(lint.Failure{
+						Confidence: 1,
+						Failure:    fmt.Sprintf("loop variable %v captured by func literal", id.Name),
+						Node:       n,
+					})
+				}
+			}
+			return true
+		})
+	}
+	if lastGGo!=nil{
+		ast.Inspect(lastGGo, func(n ast.Node) bool {
+			id, ok := n.(*ast.Ident)
+			if !ok || id.Obj == nil {
+				return true
+			}
+			for _, v := range vars {
+				if v.Obj == id.Obj {
+					w.onFailure(lint.Failure{
+						Confidence: 1,
+						Failure:    fmt.Sprintf("loop variable %v captured by func literal", id.Name),
+						Node:       n,
+					})
+				}
+			}
+			return true
+		})
+	}
+
 	return w
 }
