@@ -13,25 +13,8 @@ import (
 )
 
 var defaultRules = []lint.Rule{
-	&rule.VarDeclarationsRule{},
-	&rule.PackageCommentsRule{},
-	&rule.DotImportsRule{},
-	&rule.BlankImportsRule{},
-	&rule.ExportedRule{},
-	&rule.VarNamingRule{},
-	&rule.IndentErrorFlowRule{},
-	&rule.IfReturnRule{},
-	&rule.RangeRule{},
-	&rule.ErrorfRule{},
-	&rule.ErrorNamingRule{},
-	&rule.ErrorStringsRule{},
-	&rule.ReceiverNamingRule{},
-	&rule.IncrementDecrementRule{},
-	&rule.ErrorReturnRule{},
-	&rule.UnexportedReturnRule{},
-	&rule.TimeNamingRule{},
-	&rule.ContextKeysType{},
-	&rule.ContextAsArgumentRule{},
+	// &rule.I18nRule{},
+	&rule.ErrWrapRule{},
 }
 
 var allRules = append([]lint.Rule{
@@ -77,6 +60,8 @@ var allRules = append([]lint.Rule{
 	&rule.IdenticalBranchesRule{},
 	&rule.DeferRule{},
 	&rule.UnexportedNamingRule{},
+	&rule.ErrWrapRule{},
+	&rule.I18nRule{},
 }, defaultRules...)
 
 var allFormatters = []lint.Formatter{
